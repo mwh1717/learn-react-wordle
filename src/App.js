@@ -3,20 +3,31 @@ import { useState, useEffect } from 'react';
 
 
 function App() {
-  const [guessHistory, setGuessHistory] = useState('')
+  const [guessHistory, setGuessHistory] = useState([])
   const [currentGuess, setCurrentGuess] = useState('')
 
   // handler for key presses
   const handleKeyUp = (event) => {
-    onLetterGuess(event.key);
-    onBackspace(event.key);
+
+    // backspace
+    if (event.key === 'Backspace') {
+      onBackspace();
+    }
+
+    // a-z only
+    if (event.keyCode >= 65 && event.keyCode <= 90) {
+      onLetterGuess(event.key);
+    }
+
+    // enter
+    if (event.key === 'Enter') {
+      onGuessSubmit();
+    }
   }
 
-  // sets stat on backspace, slices currentGuess
-  const onBackspace = (press) => {
-    if (press === 'Backspace') {
-      setCurrentGuess(currentGuess.slice(0, -1));
-    }
+  // slices currentGuess
+  const onBackspace = () => {
+    setCurrentGuess(currentGuess.slice(0, -1));
   }
 
   // sets state on letter guess, including currentGuess
@@ -26,22 +37,35 @@ function App() {
     }
   }
 
+  // submits guess by adding to guessHistory and resetting currentGuess for new guesses
+  const onGuessSubmit = () => {
+    if (currentGuess.length === 5) {
+      setGuessHistory(guessHistory.concat(currentGuess));
+      setCurrentGuess('');
+    }
+  }
+
   useEffect(() => {
     document.addEventListener('keyup', handleKeyUp);
   
     return () => {
       document.removeEventListener('keyup', handleKeyUp);
     }
-  }, [onLetterGuess, onBackspace])
+  }, [onLetterGuess, onBackspace, onGuessSubmit])
 
   return (
     <div className="App" onKeyUp={handleKeyUp}>
       <header className="text-3xl font-bold underline text-center">
         Word Guess Unlimited!
       </header>
-      <main>
+      <div className="guess-history-container">
+        {guessHistory.map((guess, idx) => {
+          return (<div id={`${guess}-index-${idx}`} key={`${idx}`}> {guess} </div>)
+        })}
+      </div>
+      <div className="current-guess-container">
         {currentGuess}
-      </main>
+      </div>
     </div>
   );
 }
