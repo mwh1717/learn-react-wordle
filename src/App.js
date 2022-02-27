@@ -1,8 +1,19 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 
+const words = require('an-array-of-english-words');
+const fiveLetterWordDictionary = [];
 
-let targetWord = 'score'
+words.forEach((word) => {
+  if (word.length === 5) {
+    fiveLetterWordDictionary.push(word.toUpperCase());
+  }
+});
+
+const target = fiveLetterWordDictionary[Math.floor(Math.random() * fiveLetterWordDictionary.length)];
+const targetWord = target.toUpperCase();
+
+console.log(targetWord);
 
 function App() {
   const [guessHistory, setGuessHistory] = useState([])
@@ -32,7 +43,7 @@ function App() {
   // handles letter guess
   const onLetterGuess = (guess) => {
     if (currentGuess.length <= 4) {
-      setCurrentGuess(`${currentGuess}${guess}`);
+      setCurrentGuess(`${currentGuess}${guess}`.toUpperCase());
     }
   }
 
@@ -44,7 +55,9 @@ function App() {
       alert('VICTORY!')
       setGuessHistory([]);
       setCurrentGuess('');
-    } else if (currentGuess.length === 5 && currentGuess != targetWord) { // correct length but wrong word
+    } else if (!fiveLetterWordDictionary.includes(currentGuess)) { // word does not exist
+      alert('Not a word')
+    }else if (currentGuess.length === 5 && currentGuess != targetWord) { // correct length but wrong word
       setGuessHistory(guessHistory.concat(currentGuess));
       setCurrentGuess('');
       if (guessHistory.length === 5) {
@@ -56,7 +69,7 @@ function App() {
 
   useEffect(() => {
     document.addEventListener('keyup', handleKeyUp);
-  
+
     return () => {
       document.removeEventListener('keyup', handleKeyUp);
     }
