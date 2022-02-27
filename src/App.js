@@ -1,23 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState, useEffect } from 'react';
+
+// game state
+// handler for keypress
+const handleKeyUp = (event) => {
+  console.log('key pressed = ', event.key)
+}
+
 
 function App() {
+  const [guessHistory, setGuessHistory] = useState('')
+  const [currentGuess, setCurrentGuess] = useState('')
+
+  // adds key listener one time on mount
+  useEffect(() => {
+    document.addEventListener('keyup', handleKeyUp);
+  
+    return () => {
+      document.removeEventListener('keyup', handleKeyUp);
+    }
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="App" onKeyUp={handleKeyUp}>
+      <header className="text-3xl font-bold underline text-center">
+        Word Guess Unlimited!
       </header>
+      <main>
+      
+      </main>
     </div>
   );
 }
