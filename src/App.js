@@ -1,16 +1,21 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 
-// game state
-// handler for keypress
-const handleKeyUp = (event) => {
-  console.log('key pressed = ', event.key)
-}
-
 
 function App() {
   const [guessHistory, setGuessHistory] = useState('')
   const [currentGuess, setCurrentGuess] = useState('')
+
+  // handler for key presses
+  const handleKeyUp = (event) => {
+    onLetterGuess(event.key);
+    console.log('key pressed = ', event.key)
+  }
+
+  // sets state on letter guess
+  const onLetterGuess = (guess) => {
+    setCurrentGuess(guess);
+  }
 
   // adds key listener one time on mount
   useEffect(() => {
@@ -27,7 +32,7 @@ function App() {
         Word Guess Unlimited!
       </header>
       <main>
-      
+        {currentGuess}
       </main>
     </div>
   );
