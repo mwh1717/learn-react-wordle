@@ -2,6 +2,8 @@ import './App.css';
 import { useState, useEffect } from 'react';
 
 
+let targetWord = 'score'
+
 function App() {
   const [guessHistory, setGuessHistory] = useState([])
   const [currentGuess, setCurrentGuess] = useState('')
@@ -9,39 +11,46 @@ function App() {
   // handler for key presses
   const handleKeyUp = (event) => {
 
-    // backspace
-    if (event.key === 'Backspace') {
+    if (event.key === 'Backspace') { // backspace
       onBackspace();
     }
 
-    // a-z only
-    if (event.keyCode >= 65 && event.keyCode <= 90) {
+    if (event.keyCode >= 65 && event.keyCode <= 90) { // a-z only
       onLetterGuess(event.key);
     }
 
-    // enter
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter') { // enter
       onGuessSubmit();
     }
   }
 
-  // slices currentGuess
+  // handles backspace
   const onBackspace = () => {
     setCurrentGuess(currentGuess.slice(0, -1));
   }
 
-  // sets state on letter guess, including currentGuess
+  // handles letter guess
   const onLetterGuess = (guess) => {
     if (currentGuess.length <= 4) {
       setCurrentGuess(`${currentGuess}${guess}`);
     }
   }
 
-  // submits guess by adding to guessHistory and resetting currentGuess for new guesses
+  // handles enter press
   const onGuessSubmit = () => {
-    if (currentGuess.length === 5) {
+    if (currentGuess.length < 5) { // not enough letters
+      console.log('NEED MORE LETTERS!')
+    } else if (currentGuess === targetWord) { // win condition
+      alert('VICTORY!')
+      setGuessHistory([]);
+      setCurrentGuess('');
+    } else if (currentGuess.length === 5 && currentGuess != targetWord) { // correct length but wrong word
       setGuessHistory(guessHistory.concat(currentGuess));
       setCurrentGuess('');
+      if (guessHistory.length === 5) {
+        alert('You lose :(');
+        setGuessHistory([]);
+      }
     }
   }
 
@@ -56,11 +65,11 @@ function App() {
   return (
     <div className="App" onKeyUp={handleKeyUp}>
       <header className="text-3xl font-bold underline text-center">
-        Word Guess Unlimited!
+        Wordle Practice Unlimited!
       </header>
       <div className="guess-history-container">
         {guessHistory.map((guess, idx) => {
-          return (<div id={`${guess}-index-${idx}`} key={`${idx}`}> {guess} </div>)
+          return (<div key={`guess-history-${idx}`}> {guess} </div>)
         })}
       </div>
       <div className="current-guess-container">
