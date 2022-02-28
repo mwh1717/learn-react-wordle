@@ -1,5 +1,6 @@
 import './App.css';
 import { useState, useEffect } from 'react';
+import Keyboard from './components/Keyboard';
 
 const words = require('an-array-of-english-words');
 const fiveLetterWordDictionary = [];
@@ -76,18 +77,22 @@ function App() {
   }, [onLetterGuess, onBackspace, onGuessSubmit])
 
   return (
-    <div className="App" onKeyUp={handleKeyUp}>
+    <div className="App md" onKeyUp={handleKeyUp}>
       <header className="text-3xl font-bold underline text-center">
-        Wordle Practice Unlimited!
+        Wordle Unlimited!
       </header>
+      <div className="text-center">
+        Are you tired of waiting for tomorrow to do the next Wordle? Fear not, you can Wordle away all day, right here.
+      </div>
       <div className="guess-history-container">
         {guessHistory.map((guess, idx) => {
-          return (<div key={`guess-history-${idx}`}> {guess} </div>)
+          return (<div className="previous-guess" key={`guess-history-${idx}`}> {guess} </div>)
         })}
       </div>
       <div className="current-guess-container">
         {currentGuess}
       </div>
+      <Keyboard />
     </div>
   );
 }
